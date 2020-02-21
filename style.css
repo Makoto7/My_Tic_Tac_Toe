@@ -1,0 +1,152 @@
+:root {
+  --cell-size: 125px;
+  --mark-size: calc(var(--cell-size) * 0.9);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0 auto;
+}
+
+.game {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(3, auto);
+}
+
+.cell {
+  position: relative;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background-color: white;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+  border-top: none;
+}
+
+.cell:nth-child(3n + 1) {
+  border-left: none;
+}
+
+.cell:nth-child(3n + 3) {
+  border-right: none;
+}
+
+.cell:last-child,
+.cell:nth-child(8),
+.cell:nth-child(7) {
+  border-bottom: none;
+}
+
+.cell.cross::before,
+.game .cell:not(.cross):not(.circle):hover::before {
+  transform: rotate(45deg);
+}
+
+.cell.cross::after,
+.game .cell:not(.cross):not(.circle):hover::after {
+  transform: rotate(-45deg);
+}
+
+.cell.cross::before,
+.cell.cross::after,
+.cell.circle::before,
+.cell.circle::after {
+  background-color: black;
+}
+
+.game.cross .cell:not(.cross):not(.circle):hover::before,
+.game.cross .cell:not(.cross):not(.circle):hover::after,
+.game.circle .cell:not(.cross):not(.circle):hover::before,
+.game.circle .cell:not(.cross):not(.circle):hover::after {
+  background-color: lightgrey;
+}
+
+.cell.cross::before,
+.cell.cross::after,
+.game.cross .cell:not(.cross):not(.circle):hover::before,
+.game.cross .cell:not(.cross):not(.circle):hover::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--mark-size) * 0.15);
+  height: var(--mark-size);
+}
+
+.cell.circle::before,
+.cell.circle::after,
+.game.circle .cell:not(.circle):not(.cross):hover::before,
+.game.circle .cell:not(.circle):not(.cross):hover::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+
+.cell.circle::before,
+.game.circle .cell:not(.circle):not(.cross):hover::before {
+  width: var(--mark-size);
+  height: var(--mark-size);
+}
+
+.cell.circle::after,
+.game.circle .cell:not(.circle):not(.cross):hover::after {
+  width: calc(var(--mark-size) * 0.70);
+  height: calc(var(--mark-size) * 0.70);
+  background-color: white;
+}
+
+.cell.cross,
+.cell.circle {
+  cursor: not-allowed;
+}
+
+.win-message {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-size: 5rem;
+}
+
+.win-message.show {
+  display: flex;
+}
+
+#restartButton {
+  font-size: 3rem;
+  background-color: white;
+  border: 1px solid black;
+  padding: .25em .5em;
+  cursor: pointer;
+}
+
+.win-message #restartButton:hover {
+  background-color: black;
+  color: white;
+  border-color: white;
+}
