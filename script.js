@@ -1,6 +1,6 @@
-const isWinner = (cells, stateOfGame, winnerCombinations) => (
+const isWinner = (cells, current, winnerCombinations) => (
   winnerCombinations.some(combination => (
-    combination.every(i => cells[i].classList.contains(stateOfGame.current))
+    combination.every(i => cells[i].classList.contains(current))
   ))
 );
 
@@ -10,24 +10,25 @@ const drawMsg = (stateOfGame, msg) => {
   document.querySelector('.win-message').classList.add('show');
 }
 
-const handleClick = (e, stateOfGame, cells, winnerCombinations) => {
-  const { target: { parentNode }} = e;
+const handleClick = (event, stateOfGame, cells, winnerCombinations) => {
+  const { parentNode } = event;
+  const { current, running } = stateOfGame;
   if ((parentNode.classList.contains('circle') ||
-    parentNode.classList.contains('cross')) && stateOfGame.running) {
+    parentNode.classList.contains('cross')) && running) {
       stateOfGame['compt'] += 1;
-      const player = stateOfGame.current === 'circle' ? 'cross' : 'circle';
-      e.target.classList.add(stateOfGame.current);
-      parentNode.classList.remove(stateOfGame.current);
+      const player = current === 'circle' ? 'cross' : 'circle';
+      event.classList.add(current);
+      parentNode.classList.remove(current);
       if (stateOfGame.compt > 4) {
-        if (isWinner(cells, stateOfGame, winnerCombinations)) {
-          const msg = `${stateOfGame.current === 'circle' ? 'O' : 'X'} wins`
+        if (isWinner(cells, current, winnerCombinations)) {
+          const msg = `${current === 'circle' ? 'O' : 'X'} wins`
           return drawMsg(stateOfGame, msg);
         }
       }
       parentNode.classList.add(player);
       stateOfGame['current'] = player;
   }
-  if (stateOfGame.compt > 8 && stateOfGame.running) {
+  if (stateOfGame.compt > 8 && running) {
     stateOfGame['current'] = null;
     return drawMsg(stateOfGame, "No winner...")
   }
@@ -47,9 +48,9 @@ const main = () => {
   const cells = document.querySelectorAll('.cell');
   document.querySelector('.game').classList.add(stateOfGame.current);
   for (let i = 0; i < cells.length; i++) {
-    cells[i].addEventListener('click', e => {
-      handleClick(e, stateOfGame, cells, winnerCombinations);
-    }, { once: true });
+    cells[i].addEventListener('click', e => (
+      handleClick(e.target, stateOfGame, cells, winnerCombinations)
+    ), { once: true });
   }
 }
 
